@@ -1,0 +1,1009 @@
+{
+  "workflow": {
+    "unique_name": "definition_workflow_02A4BBY4OWERD5Uwa1RZMU4uubbnoc2q2ya",
+    "name": "tac-ask - vricci",
+    "title": "tac-ask - vricci",
+    "type": "generic.workflow",
+    "base_type": "workflow",
+    "variables": [
+      {
+        "schema_id": "tabletype_0279I28NNZMX56CODItDYHbk7gs36UX8oXr",
+        "properties": {
+          "value": [
+            {
+              "column_data": {
+                "Value": "Vincent"
+              }
+            },
+            {
+              "column_data": {
+                "Value": "Bidkar"
+              }
+            },
+            {
+              "column_data": {
+                "Value": "Alex"
+              }
+            },
+            {
+              "column_data": {
+                "Value": "Sergio"
+              }
+            }
+          ],
+          "scope": "local",
+          "name": "users",
+          "type": "datatype.table",
+          "is_required": false,
+          "is_invisible": false
+        },
+        "unique_name": "variable_workflow_02A4CAYFWH0190TsmFmqACFEWqjCFawNL97",
+        "object_type": "variable_workflow"
+      },
+      {
+        "schema_id": "datatype.string",
+        "properties": {
+          "value": "Vincent",
+          "scope": "local",
+          "name": "user",
+          "type": "datatype.string",
+          "is_required": false,
+          "is_invisible": false
+        },
+        "unique_name": "variable_workflow_02A4C7MY7DVIG4xAg2yLofA1v2CaluVPeNy",
+        "object_type": "variable_workflow"
+      }
+    ],
+    "properties": {
+      "atomic": {
+        "is_atomic": false
+      },
+      "delete_workflow_instance": false,
+      "description": "11/17_Training BOT primer",
+      "display_name": "tac-ask - vricci",
+      "runtime_user": {
+        "target_default": true
+      },
+      "target": {
+        "no_target": true
+      }
+    },
+    "object_type": "definition_workflow",
+    "actions": [
+      {
+        "unique_name": "definition_activity_02A4BLUAISDYO7Yalf93CVaTlXNgN6oksNM",
+        "name": "JSONPath Query",
+        "title": "Trigger JSONPath Query",
+        "type": "corejava.jsonpathquery",
+        "base_type": "activity",
+        "properties": {
+          "action_timeout": 30,
+          "continue_on_failure": false,
+          "display_name": "Trigger JSONPath Query",
+          "input_json": "$trigger.triggerevent_02A4LG3WKXM2L5crNKqqPLQu08putSGV0XF.output.body$",
+          "jsonpath_queries": [
+            {
+              "jsonpath_query": "$.data.roomId",
+              "jsonpath_query_name": "roomId",
+              "jsonpath_query_type": "string",
+              "zdate_type_format": "yyyy-MM-dd'T'HH:mm:ssZ"
+            },
+            {
+              "jsonpath_query": "$.data.text",
+              "jsonpath_query_name": "text",
+              "jsonpath_query_type": "string",
+              "zdate_type_format": "yyyy-MM-dd'T'HH:mm:ssZ"
+            }
+          ],
+          "skip_execution": false
+        },
+        "object_type": "definition_activity"
+      },
+      {
+        "unique_name": "definition_activity_02A4BNGONRRES5ER6aEczmuOAkJc4gJup6V",
+        "name": "Condition Block",
+        "title": "Check Message Content",
+        "type": "logic.if_else",
+        "base_type": "activity",
+        "properties": {
+          "continue_on_failure": false,
+          "display_name": "Check Message Content",
+          "skip_execution": false
+        },
+        "object_type": "definition_activity",
+        "blocks": [
+          {
+            "unique_name": "definition_activity_02A4BNGOXAFK80gA7stXilQNpZLdYw1jWle",
+            "name": "Condition Branch",
+            "title": "If Help",
+            "type": "logic.condition_block",
+            "base_type": "activity",
+            "properties": {
+              "condition": {
+                "left_operand": "$activity.definition_activity_02A4BLUAISDYO7Yalf93CVaTlXNgN6oksNM.output.jsonpath_queries.text$",
+                "operator": "mregex",
+                "right_operand": ".*[Hh]elp.*"
+              },
+              "continue_on_failure": false,
+              "display_name": "If Help",
+              "skip_execution": false
+            },
+            "object_type": "definition_activity",
+            "actions": [
+              {
+                "unique_name": "definition_activity_02A4BY5X07H2R5NqFgeuS6TBwHsMT38s1el",
+                "name": "Create Message",
+                "title": "Help Message",
+                "type": "activity.wt_create_message",
+                "base_type": "activity",
+                "properties": {
+                  "action_timeout": 180,
+                  "continue_on_failure": false,
+                  "display_name": "Help Message",
+                  "markdown": "**help** ............................... this menu\n**greater** *integer* ............ returns whether number is greater than 5\n**sr** *number* .................... return webex card with sr details\n**threshold** *number* ...... return whether case is older than 80-days\n**users** ........................... display registered users\n**webex card** ................ return webex card\n",
+                  "roomId": "$activity.definition_activity_02A4BLUAISDYO7Yalf93CVaTlXNgN6oksNM.output.jsonpath_queries.roomId$",
+                  "runtime_user": {
+                    "target_default": true
+                  },
+                  "skip_execution": false,
+                  "target": {
+                    "override_workflow_target": true,
+                    "target_id": "definition_target_02A4BVUHOJ7LC6wKqJGYxDA0Y7FJir3SNCC"
+                  },
+                  "text": "Hello, my name is tac-ask."
+                },
+                "object_type": "definition_activity"
+              }
+            ]
+          },
+          {
+            "unique_name": "definition_activity_02A4BNGP8VAG30rdFZu2leG1JAjBwjYkk68",
+            "name": "Condition Branch",
+            "title": "If users",
+            "type": "logic.condition_block",
+            "base_type": "activity",
+            "properties": {
+              "condition": {
+                "left_operand": "$activity.definition_activity_02A4BLUAISDYO7Yalf93CVaTlXNgN6oksNM.output.jsonpath_queries.text$",
+                "operator": "mregex",
+                "right_operand": ".*[uU]sers.*"
+              },
+              "continue_on_failure": false,
+              "display_name": "If users",
+              "skip_execution": false
+            },
+            "object_type": "definition_activity",
+            "actions": [
+              {
+                "unique_name": "definition_activity_02A4CCSP59JH92zIIuLUjNJnzofUhnDwDaz",
+                "name": "For Each",
+                "title": "Iterate over Users array",
+                "type": "logic.for_each",
+                "base_type": "activity",
+                "properties": {
+                  "continue_on_failure": false,
+                  "display_name": "Iterate over Users array",
+                  "skip_execution": false,
+                  "source_array": "$workflow.definition_workflow_02A4BBY4OWERD5Uwa1RZMU4uubbnoc2q2ya.local.variable_workflow_02A4CAYFWH0190TsmFmqACFEWqjCFawNL97$"
+                },
+                "object_type": "definition_activity",
+                "actions": [
+                  {
+                    "unique_name": "definition_activity_02A4C0LN7OG8T1vkQJ49epnwmpzEsG4Lj01",
+                    "name": "Create Message",
+                    "title": "Users Message",
+                    "type": "activity.wt_create_message",
+                    "base_type": "activity",
+                    "properties": {
+                      "action_timeout": 180,
+                      "continue_on_failure": false,
+                      "display_name": "Users Message",
+                      "roomId": "$activity.definition_activity_02A4BLUAISDYO7Yalf93CVaTlXNgN6oksNM.output.jsonpath_queries.roomId$",
+                      "runtime_user": {
+                        "target_default": true
+                      },
+                      "skip_execution": false,
+                      "target": {
+                        "override_workflow_target": true,
+                        "target_id": "definition_target_02A4BVUHOJ7LC6wKqJGYxDA0Y7FJir3SNCC"
+                      },
+                      "text": "Registered user is $activity.definition_activity_02A4CCSP59JH92zIIuLUjNJnzofUhnDwDaz.input.source_array[@].Value$"
+                    },
+                    "object_type": "definition_activity"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "unique_name": "definition_activity_02A4C56XBKFR95ZleaUuFpAUlwWPnImVrBu",
+            "name": "Condition Branch",
+            "title": "If Webex Card",
+            "type": "logic.condition_block",
+            "base_type": "activity",
+            "properties": {
+              "condition": {
+                "left_operand": "$activity.definition_activity_02A4BLUAISDYO7Yalf93CVaTlXNgN6oksNM.output.jsonpath_queries.text$",
+                "operator": "mregex",
+                "right_operand": ".*[Ww]ebex [Cc]ard.*"
+              },
+              "continue_on_failure": false,
+              "display_name": "If Webex Card",
+              "skip_execution": false
+            },
+            "object_type": "definition_activity",
+            "actions": [
+              {
+                "unique_name": "definition_activity_02A4C56XBLG5L4mSoFkSbwPrB9H18HLskTE",
+                "name": "Create Message",
+                "title": "Webex Card Message",
+                "type": "activity.wt_create_message",
+                "base_type": "activity",
+                "properties": {
+                  "action_timeout": 180,
+                  "attachments": "{\n  \"contentType\": \"application/vnd.microsoft.card.adaptive\",\n  \"content\":\n{\n    \"type\": \"AdaptiveCard\",\n    \"body\": [\n        {\n            \"type\": \"ColumnSet\",\n            \"columns\": [\n                {\n                    \"type\": \"Column\",\n                    \"items\": [\n                        {\n                            \"type\": \"Image\",\n                            \"style\": \"Person\",\n                            \"url\": \"https://developer.webex.com/images/webex-logo-icon-non-contained.svg\",\n                            \"size\": \"Medium\",\n                            \"height\": \"50px\"\n                        }\n                    ],\n                    \"width\": \"auto\"\n                },\n                {\n                    \"type\": \"Column\",\n                    \"items\": [\n                        {\n                            \"type\": \"TextBlock\",\n                            \"text\": \"Webex App\",\n                            \"weight\": \"Lighter\",\n                            \"color\": \"Accent\"\n                        },\n                        {\n                            \"type\": \"TextBlock\",\n                            \"weight\": \"Bolder\",\n                            \"text\": \"Buttons and Cards Release\",\n                            \"horizontalAlignment\": \"Left\",\n                            \"wrap\": true,\n                            \"color\": \"Light\",\n                            \"size\": \"Large\",\n                            \"spacing\": \"Small\"\n                        }\n                    ],\n                    \"width\": \"stretch\"\n                }\n            ]\n        },\n        {\n            \"type\": \"ColumnSet\",\n            \"columns\": [\n                {\n                    \"type\": \"Column\",\n                    \"width\": 35,\n                    \"items\": [\n                        {\n                            \"type\": \"TextBlock\",\n                            \"text\": \"Release Date:\",\n                            \"color\": \"Light\"\n                        },\n                        {\n                            \"type\": \"TextBlock\",\n                            \"text\": \"Product:\",\n                            \"weight\": \"Lighter\",\n                            \"color\": \"Light\",\n                            \"spacing\": \"Small\"\n                        },\n                        {\n                            \"type\": \"TextBlock\",\n                            \"text\": \"OS:\",\n                            \"weight\": \"Lighter\",\n                            \"color\": \"Light\",\n                            \"spacing\": \"Small\"\n                        }\n                    ]\n                },\n                {\n                    \"type\": \"Column\",\n                    \"width\": 65,\n                    \"items\": [\n                        {\n                            \"type\": \"TextBlock\",\n                            \"text\": \"Aug 6, 2019\",\n                            \"color\": \"Light\"\n                        },\n                        {\n                            \"type\": \"TextBlock\",\n                            \"text\": \"Webex\",\n                            \"color\": \"Light\",\n                            \"weight\": \"Lighter\",\n                            \"spacing\": \"Small\"\n                        },\n                        {\n                            \"type\": \"TextBlock\",\n                            \"text\": \"Mac, Windows, Web\",\n                            \"weight\": \"Lighter\",\n                            \"color\": \"Light\",\n                            \"spacing\": \"Small\"\n                        }\n                    ]\n                }\n            ],\n            \"spacing\": \"Padding\",\n            \"horizontalAlignment\": \"Center\"\n        },\n        {\n            \"type\": \"TextBlock\",\n            \"text\": \"We're making it easier for you to interact with bots and integrations in Webex. When your bot sends information in a space that includes a card with buttons, you can now easily interact with it.\",\n            \"wrap\": true\n        },\n        {\n            \"type\": \"TextBlock\",\n            \"text\": \"Buttons and Cards Resources:\"\n        },\n        {\n            \"type\": \"ColumnSet\",\n            \"columns\": [\n                {\n                    \"type\": \"Column\",\n                    \"width\": \"auto\",\n                    \"items\": [\n                        {\n                            \"type\": \"Image\",\n                            \"altText\": \"\",\n                            \"url\": \"https://developer.webex.com/images/link-icon.png\",\n                            \"size\": \"Small\",\n                            \"width\": \"30px\"\n                        }\n                    ],\n                    \"spacing\": \"Small\"\n                },\n                {\n                    \"type\": \"Column\",\n                    \"width\": \"auto\",\n                    \"items\": [\n                        {\n                            \"type\": \"TextBlock\",\n                            \"text\": \"[Developer Portal Buttons and Cards Guide]()\",\n                            \"horizontalAlignment\": \"Left\",\n                            \"size\": \"Medium\"\n                        }\n                    ],\n                    \"verticalContentAlignment\": \"Center\",\n                    \"horizontalAlignment\": \"Left\",\n                    \"spacing\": \"Small\"\n                }\n            ]\n        },\n        {\n            \"type\": \"ActionSet\",\n            \"actions\": [\n                {\n                    \"type\": \"Action.Submit\",\n                    \"title\": \"Subscribe to Release Notes\",\n                    \"data\": {\n                        \"subscribe\": true\n                    }\n                }\n            ],\n            \"horizontalAlignment\": \"Left\",\n            \"spacing\": \"None\"\n        }\n    ],\n    \"$schema\": \"http://adaptivecards.io/schemas/adaptive-card.json\",\n    \"version\": \"1.3\"\n}\n}",
+                  "continue_on_failure": false,
+                  "display_name": "Webex Card Message",
+                  "roomId": "$activity.definition_activity_02A4BLUAISDYO7Yalf93CVaTlXNgN6oksNM.output.jsonpath_queries.roomId$",
+                  "runtime_user": {
+                    "target_default": true
+                  },
+                  "skip_execution": false,
+                  "target": {
+                    "override_workflow_target": true,
+                    "target_id": "definition_target_02A4BVUHOJ7LC6wKqJGYxDA0Y7FJir3SNCC"
+                  },
+                  "text": "If you can see this, your client cannot render cards"
+                },
+                "object_type": "definition_activity"
+              }
+            ]
+          },
+          {
+            "unique_name": "definition_activity_02A4CPLOAMUAP6IvVa7uDO2OjkAIUHV3B2F",
+            "name": "Condition Branch",
+            "title": "if Greater",
+            "type": "logic.condition_block",
+            "base_type": "activity",
+            "properties": {
+              "condition": {
+                "left_operand": "$activity.definition_activity_02A4BLUAISDYO7Yalf93CVaTlXNgN6oksNM.output.jsonpath_queries.text$",
+                "operator": "mregex",
+                "right_operand": ".*[gG]reater\\s+-?\\d+.*"
+              },
+              "continue_on_failure": false,
+              "description": "Test whether the number is greater than 5",
+              "display_name": "if Greater",
+              "skip_execution": false
+            },
+            "object_type": "definition_activity",
+            "actions": [
+              {
+                "unique_name": "definition_activity_02A4CRDGMQFM25Kemvw6RQIJjoqHNkMXKf6",
+                "name": "Match Regex",
+                "title": "Match Regex",
+                "type": "core.matchregex",
+                "base_type": "activity",
+                "properties": {
+                  "continue_on_failure": false,
+                  "display_name": "Match Regex",
+                  "input_regex": "(-?\\d+)+",
+                  "input_string": "$activity.definition_activity_02A4BLUAISDYO7Yalf93CVaTlXNgN6oksNM.output.jsonpath_queries.text$",
+                  "skip_execution": false
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_02A4CVOK5FF8O5NLp0uT6GHuKQlSJ9mrlEt",
+                "name": "cast_to_int",
+                "title": "cast_to_int",
+                "type": "workflow.sub_workflow",
+                "base_type": "subworkflow",
+                "properties": {
+                  "continue_on_failure": false,
+                  "display_name": "cast_to_int",
+                  "input": {
+                    "variable_workflow_02A0XU1NXYOE71JGDC3JzhPScEy45KTDMxp": "$activity.definition_activity_02A4CRDGMQFM25Kemvw6RQIJjoqHNkMXKf6.output.matching_strings[0]$"
+                  },
+                  "runtime_user": {
+                    "target_default": true
+                  },
+                  "skip_execution": false,
+                  "target": {
+                    "no_target": true
+                  },
+                  "workflow_id": "definition_workflow_02A0XSUFXXL7G43H0B0jkI3JfVGGu1UmCkh",
+                  "workflow_name": "cast_to_int"
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_02A4CY51DOO3I67rSWZbJCbu7OpmerPmDpP",
+                "name": "Condition Block",
+                "title": "Check number value",
+                "type": "logic.if_else",
+                "base_type": "activity",
+                "properties": {
+                  "continue_on_failure": false,
+                  "display_name": "Check number value",
+                  "skip_execution": false
+                },
+                "object_type": "definition_activity",
+                "blocks": [
+                  {
+                    "unique_name": "definition_activity_02A4CY51MFJAS4UtfUWk05dcXLzV8thzD96",
+                    "name": "Condition Branch",
+                    "title": "If Greater than 5",
+                    "type": "logic.condition_block",
+                    "base_type": "activity",
+                    "properties": {
+                      "condition": {
+                        "left_operand": "$activity.definition_activity_02A4CVOK5FF8O5NLp0uT6GHuKQlSJ9mrlEt.output.variable_workflow_02A0XZIJY5C8T0Wr5grqJG9YvHiG3wExgIu$",
+                        "operator": "gt",
+                        "right_operand": 5
+                      },
+                      "continue_on_failure": false,
+                      "display_name": "If Greater than 5",
+                      "skip_execution": false
+                    },
+                    "object_type": "definition_activity",
+                    "actions": [
+                      {
+                        "unique_name": "definition_activity_02A4DC7VPO4LE4shqg9PClmHOGTkvAzjlAd",
+                        "name": "Create Message",
+                        "title": "Greater than 5 Message",
+                        "type": "activity.wt_create_message",
+                        "base_type": "activity",
+                        "properties": {
+                          "action_timeout": 180,
+                          "continue_on_failure": false,
+                          "display_name": "Greater than 5 Message",
+                          "roomId": "$activity.definition_activity_02A4BLUAISDYO7Yalf93CVaTlXNgN6oksNM.output.jsonpath_queries.roomId$",
+                          "runtime_user": {
+                            "target_default": true
+                          },
+                          "skip_execution": false,
+                          "target": {
+                            "override_workflow_target": true,
+                            "target_id": "definition_target_02A4BVUHOJ7LC6wKqJGYxDA0Y7FJir3SNCC"
+                          },
+                          "text": "$activity.definition_activity_02A4CVOK5FF8O5NLp0uT6GHuKQlSJ9mrlEt.output.variable_workflow_02A0XZIJY5C8T0Wr5grqJG9YvHiG3wExgIu$ is greater than 5"
+                        },
+                        "object_type": "definition_activity"
+                      }
+                    ]
+                  },
+                  {
+                    "unique_name": "definition_activity_02A4CY51WMAHZ1J0t8rm0kc9QdC6Xvj5C2G",
+                    "name": "Condition Branch",
+                    "title": "Not greater than 5",
+                    "type": "logic.condition_block",
+                    "base_type": "activity",
+                    "properties": {
+                      "condition": {
+                        "left_operand": "$activity.definition_activity_02A4CVOK5FF8O5NLp0uT6GHuKQlSJ9mrlEt.output.variable_workflow_02A0XZIJY5C8T0Wr5grqJG9YvHiG3wExgIu$",
+                        "operator": "lte",
+                        "right_operand": 5
+                      },
+                      "continue_on_failure": false,
+                      "display_name": "Not greater than 5",
+                      "skip_execution": false
+                    },
+                    "object_type": "definition_activity",
+                    "actions": [
+                      {
+                        "unique_name": "definition_activity_02A4DCWATFUU901HGGcMgLclKFAI3WGkcp5",
+                        "name": "Create Message",
+                        "title": "Greater than 5 Message",
+                        "type": "activity.wt_create_message",
+                        "base_type": "activity",
+                        "properties": {
+                          "action_timeout": 180,
+                          "continue_on_failure": false,
+                          "display_name": "Greater than 5 Message",
+                          "roomId": "$activity.definition_activity_02A4BLUAISDYO7Yalf93CVaTlXNgN6oksNM.output.jsonpath_queries.roomId$",
+                          "runtime_user": {
+                            "target_default": true
+                          },
+                          "skip_execution": false,
+                          "target": {
+                            "override_workflow_target": true,
+                            "target_id": "definition_target_02A4BVUHOJ7LC6wKqJGYxDA0Y7FJir3SNCC"
+                          },
+                          "text": "$activity.definition_activity_02A4CVOK5FF8O5NLp0uT6GHuKQlSJ9mrlEt.output.variable_workflow_02A0XZIJY5C8T0Wr5grqJG9YvHiG3wExgIu$ is NOT greater than 5"
+                        },
+                        "object_type": "definition_activity"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "unique_name": "definition_activity_02A4DDHUIYLO00VD8EvQYCZtyUiFymsZnEq",
+            "name": "Condition Branch",
+            "title": "If service request",
+            "type": "logic.condition_block",
+            "base_type": "activity",
+            "properties": {
+              "condition": {
+                "left_operand": "$activity.definition_activity_02A4BLUAISDYO7Yalf93CVaTlXNgN6oksNM.output.jsonpath_queries.text$",
+                "operator": "mregex",
+                "right_operand": ".*[sS][rR]\\s+[6-9]\\d{8,8}.*"
+              },
+              "continue_on_failure": false,
+              "display_name": "If service request",
+              "skip_execution": false
+            },
+            "object_type": "definition_activity",
+            "actions": [
+              {
+                "unique_name": "definition_activity_02A4DGKI1H3491pFoGv3NxeHWVUAFljSfqh",
+                "name": "Match Regex",
+                "title": "Match Service Request",
+                "type": "core.matchregex",
+                "base_type": "activity",
+                "properties": {
+                  "continue_on_failure": false,
+                  "display_name": "Match Service Request",
+                  "input_regex": "[6-9]\\d{8,8}",
+                  "input_string": "$activity.definition_activity_02A4BLUAISDYO7Yalf93CVaTlXNgN6oksNM.output.jsonpath_queries.text$",
+                  "skip_execution": false
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_02A4DFYCGF7SI0U24jtzycu46yELEUYl8MO",
+                "name": "Get Case Details",
+                "title": "Service Request Get Case Details",
+                "type": "activity.csone_get_case_details",
+                "base_type": "activity",
+                "properties": {
+                  "action_timeout": 180,
+                  "case_number": "$activity.definition_activity_02A4DGKI1H3491pFoGv3NxeHWVUAFljSfqh.output.matching_strings[0]$",
+                  "continue_on_failure": false,
+                  "display_name": "Service Request Get Case Details",
+                  "runtime_user": {
+                    "target_default": true
+                  },
+                  "skip_execution": false,
+                  "target": {
+                    "override_workflow_target": true,
+                    "target_id": "definition_target_01KB838X18KD41574rzlVWEkf9XvK8FkIib"
+                  }
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_02A4DQLY31PXG1cqBJBjWtFVHNTO3fBsGP6",
+                "name": "JSONPath Query",
+                "title": "Service Request JSONPath Query",
+                "type": "corejava.jsonpathquery",
+                "base_type": "activity",
+                "properties": {
+                  "action_timeout": 180,
+                  "continue_on_failure": false,
+                  "display_name": "Service Request JSONPath Query",
+                  "input_json": "$activity.definition_activity_02A4DFYCGF7SI0U24jtzycu46yELEUYl8MO.output.full_json$",
+                  "jsonpath_queries": [
+                    {
+                      "jsonpath_query": "$['responseDetails']['caseDetail']['createdDate']",
+                      "jsonpath_query_name": "date - created",
+                      "jsonpath_query_type": "string",
+                      "zdate_type_format": "yyyy-MM-dd'T'HH:mm:ssZ"
+                    },
+                    {
+                      "jsonpath_query": "$['responseDetails']['caseDetail']['caseNumber']",
+                      "jsonpath_query_name": "case number",
+                      "jsonpath_query_type": "string"
+                    },
+                    {
+                      "jsonpath_query": "$['responseDetails']['caseDetail']['workgroup']",
+                      "jsonpath_query_name": "workgroup",
+                      "jsonpath_query_type": "string",
+                      "zdate_type_format": "yyyy-MM-dd'T'HH:mm:ssZ"
+                    },
+                    {
+                      "jsonpath_query": "$['responseDetails']['caseDetail']['status']",
+                      "jsonpath_query_name": "status",
+                      "jsonpath_query_type": "string",
+                      "zdate_type_format": "yyyy-MM-dd'T'HH:mm:ssZ"
+                    },
+                    {
+                      "jsonpath_query": "$['responseDetails']['caseDetail']['priority']",
+                      "jsonpath_query_name": "priority",
+                      "jsonpath_query_type": "integer",
+                      "zdate_type_format": "yyyy-MM-dd'T'HH:mm:ssZ"
+                    },
+                    {
+                      "jsonpath_query": "$['responseDetails']['caseDetail']['lastUpdateDate']",
+                      "jsonpath_query_name": "date - last update",
+                      "jsonpath_query_type": "string",
+                      "zdate_type_format": "yyyy-MM-dd'T'HH:mm:ssZ"
+                    },
+                    {
+                      "jsonpath_query": "$['responseDetails']['caseDetail']['ownerUserId']",
+                      "jsonpath_query_name": "owner userid",
+                      "jsonpath_query_type": "string",
+                      "zdate_type_format": "yyyy-MM-dd'T'HH:mm:ssZ"
+                    },
+                    {
+                      "jsonpath_query": "$['responseDetails']['caseDetail']['ownerName']",
+                      "jsonpath_query_name": "owner name",
+                      "jsonpath_query_type": "string",
+                      "zdate_type_format": "yyyy-MM-dd'T'HH:mm:ssZ"
+                    },
+                    {
+                      "jsonpath_query": "$['responseDetails']['caseDetail']['radkit']",
+                      "jsonpath_query_name": "radkit enabled",
+                      "jsonpath_query_type": "string",
+                      "zdate_type_format": "yyyy-MM-dd'T'HH:mm:ssZ"
+                    }
+                  ],
+                  "skip_execution": false
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_02A4DDHUIZ8R45aNG4edF9NDG2yOXhiohv8",
+                "name": "Create Message",
+                "title": "Service Request Webex Card Message",
+                "type": "activity.wt_create_message",
+                "base_type": "activity",
+                "properties": {
+                  "action_timeout": 180,
+                  "attachments": "{\n  \"contentType\": \"application/vnd.microsoft.card.adaptive\",\n  \"content\": {\n    \"type\": \"AdaptiveCard\",\n    \"$schema\": \"http://adaptivecards.io/schemas/adaptive-card.json\",\n    \"version\": \"1.3\",\n    \"body\": [\n      {\n        \"type\": \"TextBlock\",\n        \"text\": \"SR $activity.definition_activity_02A4DQLY31PXG1cqBJBjWtFVHNTO3fBsGP6.output.jsonpath_queries.case number$\",\n        \"wrap\": true\n      },\n      {\n        \"type\": \"TextBlock\",\n        \"text\": \"Priority: $activity.definition_activity_02A4DQLY31PXG1cqBJBjWtFVHNTO3fBsGP6.output.jsonpath_queries.priority$\",\n        \"wrap\": true\n      },\n      {\n        \"type\": \"TextBlock\",\n        \"text\": \"Status:\\t\\t\\t\\t$activity.definition_activity_02A4DQLY31PXG1cqBJBjWtFVHNTO3fBsGP6.output.jsonpath_queries.status$\",\n        \"wrap\": true\n      },\n      {\n        \"type\": \"TextBlock\",\n        \"text\": \"Case Owner:\\t\\t$activity.definition_activity_02A4DQLY31PXG1cqBJBjWtFVHNTO3fBsGP6.output.jsonpath_queries.owner name$\",\n        \"wrap\": true\n      },\n      {\n        \"type\": \"TextBlock\",\n        \"text\": \"Last Updated:\\t\\t$activity.definition_activity_02A4DQLY31PXG1cqBJBjWtFVHNTO3fBsGP6.output.jsonpath_queries.date - last update$\",\n        \"wrap\": true\n      },\n      {\n        \"type\": \"TextBlock\",\n        \"text\": \"Created:\\t\\t\\t$activity.definition_activity_02A4DQLY31PXG1cqBJBjWtFVHNTO3fBsGP6.output.jsonpath_queries.date - created$\",\n        \"wrap\": true\n      },\n      {\n        \"type\": \"TextBlock\",\n        \"text\": \"Radkit enabled:\\t\\t$activity.definition_activity_02A4DQLY31PXG1cqBJBjWtFVHNTO3fBsGP6.output.jsonpath_queries.radkit enabled$\",\n        \"wrap\": true\n      },\n      {\n        \"type\": \"TextBlock\",\n        \"text\": \"Workgroup:\\t\\t\\t$activity.definition_activity_02A4DQLY31PXG1cqBJBjWtFVHNTO3fBsGP6.output.jsonpath_queries.workgroup$\",\n        \"wrap\": true\n      }\n    ]\n  }\n}",
+                  "continue_on_failure": false,
+                  "display_name": "Service Request Webex Card Message",
+                  "roomId": "$activity.definition_activity_02A4BLUAISDYO7Yalf93CVaTlXNgN6oksNM.output.jsonpath_queries.roomId$",
+                  "runtime_user": {
+                    "target_default": true
+                  },
+                  "skip_execution": false,
+                  "target": {
+                    "override_workflow_target": true,
+                    "target_id": "definition_target_02A4BVUHOJ7LC6wKqJGYxDA0Y7FJir3SNCC"
+                  },
+                  "text": "Report for Service Request"
+                },
+                "object_type": "definition_activity"
+              }
+            ]
+          },
+          {
+            "unique_name": "definition_activity_02A4E7LR3C4IH1JDXGhXYMWglgu24GHXXE7",
+            "name": "Condition Branch",
+            "title": "If Threshold",
+            "type": "logic.condition_block",
+            "base_type": "activity",
+            "properties": {
+              "condition": {
+                "left_operand": "$activity.definition_activity_02A4BLUAISDYO7Yalf93CVaTlXNgN6oksNM.output.jsonpath_queries.text$",
+                "operator": "mregex",
+                "right_operand": ".*[cC]ase\\s+[6-9]\\d{8,8}.*"
+              },
+              "continue_on_failure": false,
+              "display_name": "If Threshold",
+              "skip_execution": false
+            },
+            "object_type": "definition_activity",
+            "actions": [
+              {
+                "unique_name": "definition_activity_02A4E7LR3CQ252RHxAd2SRQZ8V7Pw3sMCLg",
+                "name": "Match Regex",
+                "title": "Match Threshold",
+                "type": "core.matchregex",
+                "base_type": "activity",
+                "properties": {
+                  "continue_on_failure": false,
+                  "display_name": "Match Threshold",
+                  "input_regex": "[6-9]\\d{8,8}",
+                  "input_string": "$activity.definition_activity_02A4BLUAISDYO7Yalf93CVaTlXNgN6oksNM.output.jsonpath_queries.text$",
+                  "skip_execution": false
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_02A4E7LR3EFRV26uZcTjhc6vMwKjaimzCW2",
+                "name": "Get Case Details",
+                "title": "Threshold Get Case Details",
+                "type": "activity.csone_get_case_details",
+                "base_type": "activity",
+                "properties": {
+                  "action_timeout": 180,
+                  "case_number": "$activity.definition_activity_02A4E7LR3CQ252RHxAd2SRQZ8V7Pw3sMCLg.output.matching_strings[0]$",
+                  "continue_on_failure": false,
+                  "display_name": "Threshold Get Case Details",
+                  "runtime_user": {
+                    "target_default": true
+                  },
+                  "skip_execution": false,
+                  "target": {
+                    "override_workflow_target": true,
+                    "target_id": "definition_target_01KB838X18KD41574rzlVWEkf9XvK8FkIib"
+                  }
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_02A4E7LR3J6H07mYPJhEFSh5r7qpH4UrX8B",
+                "name": "JSONPath Query",
+                "title": "Threshold JSONPath Query",
+                "type": "corejava.jsonpathquery",
+                "base_type": "activity",
+                "properties": {
+                  "action_timeout": 180,
+                  "continue_on_failure": false,
+                  "display_name": "Threshold JSONPath Query",
+                  "input_json": "$activity.definition_activity_02A4E7LR3EFRV26uZcTjhc6vMwKjaimzCW2.output.full_json$",
+                  "jsonpath_queries": [
+                    {
+                      "jsonpath_query": "$..datecreated",
+                      "jsonpath_query_name": "created date",
+                      "jsonpath_query_type": "date",
+                      "zdate_type_format": "yyyy-MM-dd'T'HH:mm:ssZ"
+                    }
+                  ],
+                  "skip_execution": false
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_02A4E7LR3JXZQ3ZdZghb2ZRMhCbBprhHlbF",
+                "name": "Create Message",
+                "title": "Threshold Webex Card Message",
+                "type": "activity.wt_create_message",
+                "base_type": "activity",
+                "properties": {
+                  "action_timeout": 180,
+                  "attachments": "{\n  \"contentType\": \"application/vnd.microsoft.card.adaptive\",\n  \"content\":\n{\n    \"type\": \"AdaptiveCard\",\n    \"body\": [\n        {\n            \"type\": \"ColumnSet\",\n            \"columns\": [\n                {\n                    \"type\": \"Column\",\n                    \"items\": [\n                        {\n                            \"type\": \"Image\",\n                            \"style\": \"Person\",\n                            \"url\": \"https://developer.webex.com/images/webex-logo-icon-non-contained.svg\",\n                            \"size\": \"Medium\",\n                            \"height\": \"50px\"\n                        }\n                    ],\n                    \"width\": \"auto\"\n                },\n                {\n                    \"type\": \"Column\",\n                    \"items\": [\n                        {\n                            \"type\": \"TextBlock\",\n                            \"text\": \"Webex App\",\n                            \"weight\": \"Lighter\",\n                            \"color\": \"Accent\"\n                        },\n                        {\n                            \"type\": \"TextBlock\",\n                            \"weight\": \"Bolder\",\n                            \"text\": \"Buttons and Cards Release\",\n                            \"horizontalAlignment\": \"Left\",\n                            \"wrap\": true,\n                            \"color\": \"Light\",\n                            \"size\": \"Large\",\n                            \"spacing\": \"Small\"\n                        }\n                    ],\n                    \"width\": \"stretch\"\n                }\n            ]\n        },\n        {\n            \"type\": \"ColumnSet\",\n            \"columns\": [\n                {\n                    \"type\": \"Column\",\n                    \"width\": 35,\n                    \"items\": [\n                        {\n                            \"type\": \"TextBlock\",\n                            \"text\": \"Release Date:\",\n                            \"color\": \"Light\"\n                        },\n                        {\n                            \"type\": \"TextBlock\",\n                            \"text\": \"Product:\",\n                            \"weight\": \"Lighter\",\n                            \"color\": \"Light\",\n                            \"spacing\": \"Small\"\n                        },\n                        {\n                            \"type\": \"TextBlock\",\n                            \"text\": \"OS:\",\n                            \"weight\": \"Lighter\",\n                            \"color\": \"Light\",\n                            \"spacing\": \"Small\"\n                        }\n                    ]\n                },\n                {\n                    \"type\": \"Column\",\n                    \"width\": 65,\n                    \"items\": [\n                        {\n                            \"type\": \"TextBlock\",\n                            \"text\": \"Aug 6, 2019\",\n                            \"color\": \"Light\"\n                        },\n                        {\n                            \"type\": \"TextBlock\",\n                            \"text\": \"Webex\",\n                            \"color\": \"Light\",\n                            \"weight\": \"Lighter\",\n                            \"spacing\": \"Small\"\n                        },\n                        {\n                            \"type\": \"TextBlock\",\n                            \"text\": \"Mac, Windows, Web\",\n                            \"weight\": \"Lighter\",\n                            \"color\": \"Light\",\n                            \"spacing\": \"Small\"\n                        }\n                    ]\n                }\n            ],\n            \"spacing\": \"Padding\",\n            \"horizontalAlignment\": \"Center\"\n        },\n        {\n            \"type\": \"TextBlock\",\n            \"text\": \"We're making it easier for you to interact with bots and integrations in Webex. When your bot sends information in a space that includes a card with buttons, you can now easily interact with it.\",\n            \"wrap\": true\n        },\n        {\n            \"type\": \"TextBlock\",\n            \"text\": \"Buttons and Cards Resources:\"\n        },\n        {\n            \"type\": \"ColumnSet\",\n            \"columns\": [\n                {\n                    \"type\": \"Column\",\n                    \"width\": \"auto\",\n                    \"items\": [\n                        {\n                            \"type\": \"Image\",\n                            \"altText\": \"\",\n                            \"url\": \"https://developer.webex.com/images/link-icon.png\",\n                            \"size\": \"Small\",\n                            \"width\": \"30px\"\n                        }\n                    ],\n                    \"spacing\": \"Small\"\n                },\n                {\n                    \"type\": \"Column\",\n                    \"width\": \"auto\",\n                    \"items\": [\n                        {\n                            \"type\": \"TextBlock\",\n                            \"text\": \"[Developer Portal Buttons and Cards Guide]()\",\n                            \"horizontalAlignment\": \"Left\",\n                            \"size\": \"Medium\"\n                        }\n                    ],\n                    \"verticalContentAlignment\": \"Center\",\n                    \"horizontalAlignment\": \"Left\",\n                    \"spacing\": \"Small\"\n                }\n            ]\n        },\n        {\n            \"type\": \"ActionSet\",\n            \"actions\": [\n                {\n                    \"type\": \"Action.Submit\",\n                    \"title\": \"Subscribe to Release Notes\",\n                    \"data\": {\n                        \"subscribe\": true\n                    }\n                }\n            ],\n            \"horizontalAlignment\": \"Left\",\n            \"spacing\": \"None\"\n        }\n    ],\n    \"$schema\": \"http://adaptivecards.io/schemas/adaptive-card.json\",\n    \"version\": \"1.3\"\n}\n}",
+                  "continue_on_failure": false,
+                  "display_name": "Threshold Webex Card Message",
+                  "roomId": "$activity.definition_activity_02A4BLUAISDYO7Yalf93CVaTlXNgN6oksNM.output.jsonpath_queries.roomId$",
+                  "runtime_user": {
+                    "target_default": true
+                  },
+                  "skip_execution": false,
+                  "target": {
+                    "override_workflow_target": true,
+                    "target_id": "definition_target_02A4BVUHOJ7LC6wKqJGYxDA0Y7FJir3SNCC"
+                  },
+                  "text": "If you can see this, your client cannot render cards"
+                },
+                "object_type": "definition_activity"
+              }
+            ]
+          },
+          {
+            "unique_name": "definition_activity_02A4CIKXGDWG63PIZNTLfaMCKIbJY44pcS0",
+            "name": "Condition Branch",
+            "title": "Else",
+            "type": "logic.condition_block",
+            "base_type": "activity",
+            "properties": {
+              "condition": {
+                "left_operand": "$activity.definition_activity_02A4BLUAISDYO7Yalf93CVaTlXNgN6oksNM.output.jsonpath_queries.text$",
+                "operator": "mw",
+                "right_operand": "*"
+              },
+              "continue_on_failure": false,
+              "display_name": "Else",
+              "skip_execution": false
+            },
+            "object_type": "definition_activity",
+            "actions": [
+              {
+                "unique_name": "definition_activity_02A4CIKXGEJME1aoE8qjN4oAxI7GIpw45gp",
+                "name": "Create Message",
+                "title": "Else Message",
+                "type": "activity.wt_create_message",
+                "base_type": "activity",
+                "properties": {
+                  "action_timeout": 180,
+                  "continue_on_failure": false,
+                  "display_name": "Else Message",
+                  "roomId": "$activity.definition_activity_02A4BLUAISDYO7Yalf93CVaTlXNgN6oksNM.output.jsonpath_queries.roomId$",
+                  "runtime_user": {
+                    "target_default": true
+                  },
+                  "skip_execution": false,
+                  "target": {
+                    "override_workflow_target": true,
+                    "target_id": "definition_target_02A4BVUHOJ7LC6wKqJGYxDA0Y7FJir3SNCC"
+                  },
+                  "text": "Option not recognized, please type 'help' to see the available options\n"
+                },
+                "object_type": "definition_activity"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "categories": [
+      "category_1BMfMXSnJMyt5Ihqi7rWJr5N8cf"
+    ]
+  },
+  "categories": {
+    "category_02A0CWIGJTL5K754UkeghqIpZkagXoeZR5g": {
+      "unique_name": "category_02A0CWIGJTL5K754UkeghqIpZkagXoeZR5g",
+      "name": "bpaez",
+      "title": "bpaez",
+      "type": "basic.category",
+      "base_type": "category",
+      "description": "Workflows created and managed by bpaez",
+      "category_type": "custom",
+      "object_type": "category"
+    }
+  },
+  "rules": {
+    "ruleevent_02A4LG3WIV4203vn9jIFaNnT7bWxy0seEvS": {
+      "name": "tac-ask-Trigger-Event",
+      "title": "tac-ask-Trigger-Event",
+      "type": "amqp.rule_event",
+      "rule_type": "rule_event",
+      "base_type": "rule",
+      "object_type": "ruleevent",
+      "version": "1.0.0",
+      "properties": {
+        "description": "",
+        "disabled": false,
+        "display_name": "tac-ask-Trigger-Event",
+        "queue_name": "tac-ask",
+        "rule_type": "rule_event",
+        "target_id": "definition_target_024YCLHMLGYMX1yJHvzn3PXlt6bneQrYmey",
+        "title": "tac-ask-Trigger-Event",
+        "workflows_config": [
+          {
+            "disabled": false,
+            "workflow_id": "definition_workflow_02A4BBY4OWERD5Uwa1RZMU4uubbnoc2q2ya"
+          }
+        ]
+      },
+      "disabled": false,
+      "unique_name": "ruleevent_02A4LG3WIV4203vn9jIFaNnT7bWxy0seEvS"
+    }
+  },
+  "events": {
+    "event_02A4LG3WFE3UJ4dZ9TRtkO5e4burVyUaVuX": {
+      "name": "tac-ask-Trigger-Event",
+      "title": "tac-ask-Trigger-Event",
+      "type": "amqp.event",
+      "base_type": "event",
+      "object_type": "event",
+      "rule_id": "ruleevent_02A4LG3WIV4203vn9jIFaNnT7bWxy0seEvS",
+      "target_id": "definition_target_024YCLHMLGYMX1yJHvzn3PXlt6bneQrYmey",
+      "webhook_id": "",
+      "version": "1.0.0",
+      "properties": {
+        "disabled": false,
+        "display_name": "tac-ask-Trigger-Event",
+        "queue_name": "tac-ask",
+        "rule_type": "rule_event",
+        "target_id": "definition_target_024YCLHMLGYMX1yJHvzn3PXlt6bneQrYmey",
+        "title": "tac-ask-Trigger-Event"
+      },
+      "unique_name": "event_02A4LG3WFE3UJ4dZ9TRtkO5e4burVyUaVuX"
+    }
+  },
+  "targets": {
+    "definition_target_01KB838X18KD41574rzlVWEkf9XvK8FkIib": {
+      "unique_name": "definition_target_01KB838X18KD41574rzlVWEkf9XvK8FkIib",
+      "name": "CSONE API PROD",
+      "title": "CSONE API PROD",
+      "type": "target.csone_endpoint",
+      "base_type": "target",
+      "object_type": "definition_target",
+      "properties": {
+        "default_runtime_user_id": "definition_runtime_user_028YMYQC3J1XQ5l01HN7YehnX0R1cM1MoNG",
+        "description": "t",
+        "display_name": "CSONE API PROD",
+        "environment": "Production",
+        "oauth_endpoint": "https://id.cisco.com/oauth2/default/v1/token",
+        "web_service_endpoint": "https://apx.cisco.com/cuscare/cm/v2.0/"
+      }
+    },
+    "definition_target_024YCLHMLGYMX1yJHvzn3PXlt6bneQrYmey": {
+      "unique_name": "definition_target_024YCLHMLGYMX1yJHvzn3PXlt6bneQrYmey",
+      "name": "Quicker.Queue",
+      "title": "Quicker.Queue",
+      "type": "amqp.endpoint",
+      "base_type": "target",
+      "object_type": "definition_target",
+      "properties": {
+        "default_runtime_user_id": "definition_runtime_user_024YCL4CVA13L46ORp3eUx7NMcMynmmVHc6",
+        "display_name": "Quicker.Queue",
+        "host": "ascension-amqp-aas.cisco.com",
+        "ignore_certificate_errors": true,
+        "port": 5671,
+        "ssl_enabled": true,
+        "vhost": "Webex-Teams-Bot-Gateway"
+      }
+    },
+    "definition_target_02A4BVUHOJ7LC6wKqJGYxDA0Y7FJir3SNCC": {
+      "unique_name": "definition_target_02A4BVUHOJ7LC6wKqJGYxDA0Y7FJir3SNCC",
+      "name": "tac-ask-Target",
+      "title": "tac-ask-Target",
+      "type": "target.wt_endpoint",
+      "base_type": "target",
+      "object_type": "definition_target",
+      "properties": {
+        "default_runtime_user_id": "definition_runtime_user_02A4BVOS5ILJJ1JTTyuNkSVGECXfZ7b1tYV",
+        "display_name": "tac-ask-Target",
+        "host": "api.ciscospark.com",
+        "protocol": "https",
+        "version": "v1"
+      }
+    }
+  },
+  "runtime_users": {
+    "definition_runtime_user_024YCL4CVA13L46ORp3eUx7NMcMynmmVHc6": {
+      "unique_name": "definition_runtime_user_024YCL4CVA13L46ORp3eUx7NMcMynmmVHc6",
+      "name": "Quicker Bots login",
+      "title": "Quicker Bots login",
+      "type": "runtime_user.amqp_password_credentials",
+      "base_type": "runtime_user",
+      "object_type": "definition_runtime_user",
+      "properties": {
+        "display_name": "Quicker Bots login",
+        "password": "*****",
+        "username": "bot"
+      }
+    },
+    "definition_runtime_user_028YMYQC3J1XQ5l01HN7YehnX0R1cM1MoNG": {
+      "unique_name": "definition_runtime_user_028YMYQC3J1XQ5l01HN7YehnX0R1cM1MoNG",
+      "name": "OKTA ISA Creds",
+      "title": "OKTA ISA Creds",
+      "type": "runtime_user.csone_credentials",
+      "base_type": "runtime_user",
+      "object_type": "definition_runtime_user",
+      "properties": {
+        "client_id": "0oaagefg26iFexUBo5d7",
+        "client_secret": "*****",
+        "display_name": "OKTA ISA Creds"
+      }
+    },
+    "definition_runtime_user_02A4BVOS5ILJJ1JTTyuNkSVGECXfZ7b1tYV": {
+      "unique_name": "definition_runtime_user_02A4BVOS5ILJJ1JTTyuNkSVGECXfZ7b1tYV",
+      "name": "tac-ask",
+      "title": "tac-ask",
+      "type": "runtime_user.wt_credentials",
+      "base_type": "runtime_user",
+      "object_type": "definition_runtime_user",
+      "properties": {
+        "display_name": "tac-ask",
+        "token": "*****"
+      }
+    }
+  },
+  "table_types": {
+    "tabletype_0279I28NNZMX56CODItDYHbk7gs36UX8oXr": {
+      "unique_name": "tabletype_0279I28NNZMX56CODItDYHbk7gs36UX8oXr",
+      "data_type": "datatype.tabletype",
+      "display_name": "Array",
+      "columns": [
+        {
+          "name": "Value",
+          "title": "Value",
+          "type": "string"
+        }
+      ],
+      "base_type": "datatype",
+      "object_type": "tabletype"
+    }
+  },
+  "subworkflows": [
+    {
+      "workflow": {
+        "unique_name": "definition_workflow_02A0XSUFXXL7G43H0B0jkI3JfVGGu1UmCkh",
+        "name": "cast_to_int",
+        "title": "cast_to_int",
+        "type": "generic.workflow",
+        "base_type": "workflow",
+        "variables": [
+          {
+            "schema_id": "datatype.string",
+            "properties": {
+              "value": "",
+              "scope": "input",
+              "name": "string_number",
+              "type": "datatype.string",
+              "is_required": false,
+              "is_invisible": false
+            },
+            "unique_name": "variable_workflow_02A0XU1NXYOE71JGDC3JzhPScEy45KTDMxp",
+            "object_type": "variable_workflow"
+          },
+          {
+            "schema_id": "datatype.integer",
+            "properties": {
+              "value": 0,
+              "scope": "output",
+              "name": "Output",
+              "type": "datatype.integer",
+              "is_required": false,
+              "is_invisible": false
+            },
+            "unique_name": "variable_workflow_02A0XZIJY5C8T0Wr5grqJG9YvHiG3wExgIu",
+            "object_type": "variable_workflow"
+          }
+        ],
+        "properties": {
+          "atomic": {
+            "is_atomic": false
+          },
+          "delete_workflow_instance": false,
+          "description": "Gets a string and casts it to integer",
+          "display_name": "cast_to_int",
+          "runtime_user": {
+            "target_default": true
+          },
+          "target": {
+            "no_target": true
+          }
+        },
+        "object_type": "definition_workflow",
+        "actions": [
+          {
+            "unique_name": "definition_activity_02A0XU5AT8TN32wb6brebOh7ydLfu0EF8mP",
+            "name": "Execute Python Script",
+            "title": "Execute Python Script",
+            "type": "python3.script",
+            "base_type": "activity",
+            "properties": {
+              "action_timeout": 180,
+              "continue_on_failure": false,
+              "display_name": "Execute Python Script",
+              "script": "from sys import argv\n\npy_output = int(argv[1])",
+              "script_arguments": [
+                "$workflow.definition_workflow_02A0XSUFXXL7G43H0B0jkI3JfVGGu1UmCkh.input.variable_workflow_02A0XU1NXYOE71JGDC3JzhPScEy45KTDMxp$"
+              ],
+              "script_queries": [
+                {
+                  "script_query": "py_output",
+                  "script_query_name": "py_output",
+                  "script_query_type": "integer"
+                }
+              ],
+              "skip_execution": false
+            },
+            "object_type": "definition_activity"
+          },
+          {
+            "unique_name": "definition_activity_02A0Y0GKO9URF4w6d8zgwpYbTqQvCZtwK65",
+            "name": "Set Variables",
+            "title": "Set Variables",
+            "type": "core.set_multiple_variables",
+            "base_type": "activity",
+            "properties": {
+              "continue_on_failure": false,
+              "display_name": "Set Variables",
+              "skip_execution": false,
+              "variables_to_update": [
+                {
+                  "variable_to_update": "$workflow.definition_workflow_02A0XSUFXXL7G43H0B0jkI3JfVGGu1UmCkh.output.variable_workflow_02A0XZIJY5C8T0Wr5grqJG9YvHiG3wExgIu$",
+                  "variable_value_new": "$activity.definition_activity_02A0XU5AT8TN32wb6brebOh7ydLfu0EF8mP.output.script_queries.py_output$"
+                }
+              ]
+            },
+            "object_type": "definition_activity"
+          }
+        ],
+        "categories": [
+          "category_02A0CWIGJTL5K754UkeghqIpZkagXoeZR5g"
+        ]
+      }
+    }
+  ],
+  "dependent_workflows": [
+    "definition_workflow_02A0XSUFXXL7G43H0B0jkI3JfVGGu1UmCkh"
+  ],
+  "wf_rule_trigger": {
+    "triggerevent_02A4LG3WKXM2L5crNKqqPLQu08putSGV0XF": {
+      "wf_unique_name": "definition_workflow_02A4BBY4OWERD5Uwa1RZMU4uubbnoc2q2ya",
+      "rule_unique_name": "ruleevent_02A4LG3WIV4203vn9jIFaNnT7bWxy0seEvS",
+      "trig_unique_name": "triggerevent_02A4LG3WKXM2L5crNKqqPLQu08putSGV0XF"
+    }
+  }
+}
