@@ -7,6 +7,88 @@
     "base_type": "workflow",
     "variables": [
       {
+        "schema_id": "datatype.string",
+        "properties": {
+          "value": "Vincent",
+          "scope": "local",
+          "name": "user",
+          "type": "datatype.string",
+          "is_required": false,
+          "is_invisible": false
+        },
+        "unique_name": "variable_workflow_02A4C7MY7DVIG4xAg2yLofA1v2CaluVPeNy",
+        "object_type": "variable_workflow"
+      },
+      {
+        "schema_id": "datatype.secure_string",
+        "properties": {
+          "value": "*****",
+          "scope": "local",
+          "name": "SWIMS Ticket username",
+          "type": "datatype.secure_string",
+          "description": "user to get a ticket from SWIMS",
+          "is_required": false,
+          "is_invisible": false
+        },
+        "unique_name": "variable_workflow_02AOZHV9ILM7A69tCRYUijRolheU3MOiBxt",
+        "object_type": "variable_workflow"
+      },
+      {
+        "schema_id": "datatype.string",
+        "properties": {
+          "value": "",
+          "scope": "local",
+          "name": "aberto_challenge",
+          "type": "datatype.string",
+          "description": "challenge string provided by Nexus 9K when attempting to access the bash shell",
+          "is_required": false,
+          "is_invisible": false
+        },
+        "unique_name": "variable_workflow_02AP0YFAXQ4YT4i3Ni5sdI45OPO05088pjt",
+        "object_type": "variable_workflow"
+      },
+      {
+        "schema_id": "datatype.string",
+        "properties": {
+          "value": "",
+          "scope": "local",
+          "name": "consent_token",
+          "type": "datatype.string",
+          "description": "Aberto Challenge provided during attempt to access bash shell when consent-token is configured (NXOS ≥10.3(2))",
+          "is_required": false,
+          "is_invisible": false
+        },
+        "unique_name": "variable_workflow_02AP0DBIN7W7G16iMjHAj9xC7dM6RYI7K3C",
+        "object_type": "variable_workflow"
+      },
+      {
+        "schema_id": "datatype.secure_string",
+        "properties": {
+          "value": "*****",
+          "scope": "local",
+          "name": "SWIMS ticket Password",
+          "type": "datatype.secure_string",
+          "is_required": false,
+          "is_invisible": false
+        },
+        "unique_name": "variable_workflow_02AOZI6LYEJQ04ZoD6hx53jJZKGmp9cFGVU",
+        "object_type": "variable_workflow"
+      },
+      {
+        "schema_id": "datatype.secure_string",
+        "properties": {
+          "value": "",
+          "scope": "local",
+          "name": "placeholder",
+          "type": "datatype.secure_string",
+          "description": "to be used when the target API endpoint does not support the standard authentication methods -- when you need a custom header",
+          "is_required": false,
+          "is_invisible": false
+        },
+        "unique_name": "variable_workflow_02ALA3WV1MOHH6y7wTZIZfBWeIMumifde0D",
+        "object_type": "variable_workflow"
+      },
+      {
         "schema_id": "tabletype_0279I28NNZMX56CODItDYHbk7gs36UX8oXr",
         "properties": {
           "value": [
@@ -39,19 +121,6 @@
         },
         "unique_name": "variable_workflow_02A4CAYFWH0190TsmFmqACFEWqjCFawNL97",
         "object_type": "variable_workflow"
-      },
-      {
-        "schema_id": "datatype.string",
-        "properties": {
-          "value": "Vincent",
-          "scope": "local",
-          "name": "user",
-          "type": "datatype.string",
-          "is_required": false,
-          "is_invisible": false
-        },
-        "unique_name": "variable_workflow_02A4C7MY7DVIG4xAg2yLofA1v2CaluVPeNy",
-        "object_type": "variable_workflow"
       }
     ],
     "properties": {
@@ -59,7 +128,7 @@
         "is_atomic": false
       },
       "delete_workflow_instance": false,
-      "description": "11/17_Training BOT primer",
+      "description": "workflow for bot tac-ask.  Use @tac-ask help",
       "display_name": "tac-ask - vricci",
       "runtime_user": {
         "target_default": true
@@ -676,6 +745,194 @@
             ]
           },
           {
+            "unique_name": "definition_activity_02ADWTYCFY9CQ5SO5OHMS8K5Ss7E5rhI9TB",
+            "name": "Condition Branch",
+            "title": "If consent-token",
+            "type": "logic.condition_block",
+            "base_type": "activity",
+            "properties": {
+              "condition": {
+                "left_operand": "$activity.definition_activity_02A4BLUAISDYO7Yalf93CVaTlXNgN6oksNM.output.jsonpath_queries.text$",
+                "operator": "mregex",
+                "right_operand": ".*[cC]onsent-[Tt]oken.*"
+              },
+              "continue_on_failure": false,
+              "description": "Consent-Token Authorization using SWIMS aberto service endpoint https://swims.cisco.com/aberto/api/sign",
+              "display_name": "If consent-token",
+              "skip_execution": false
+            },
+            "object_type": "definition_activity",
+            "actions": [
+              {
+                "unique_name": "definition_activity_02AOZMWQ459BE4xrlG0ZHUUXnrxQXSAliNW",
+                "name": "Match Regex",
+                "title": "Match Aberto challenge",
+                "type": "core.matchregex",
+                "base_type": "activity",
+                "properties": {
+                  "continue_on_failure": false,
+                  "description": "Extract Aberto Challenge",
+                  "display_name": "Match Aberto challenge",
+                  "input_regex": "(?P\u003cchallenge\u003e\\S{172,})",
+                  "input_string": "$activity.definition_activity_02A4BLUAISDYO7Yalf93CVaTlXNgN6oksNM.output.jsonpath_queries.text$",
+                  "skip_execution": false
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_02AP0BL0UKPPI06Xt6jp8i5TTw5jrKUDKA6",
+                "name": "Set Variables",
+                "title": "Set Aberto challenge Variable",
+                "type": "core.set_multiple_variables",
+                "base_type": "activity",
+                "properties": {
+                  "continue_on_failure": false,
+                  "description": "Refer to https://wiki.cisco.com/display/SJRP/Consent-Token+Root+Shell+Access+-+Nexus+9K",
+                  "display_name": "Set Aberto challenge Variable",
+                  "skip_execution": false,
+                  "variables_to_update": [
+                    {
+                      "variable_to_update": "$workflow.definition_workflow_02A4BBY4OWERD5Uwa1RZMU4uubbnoc2q2ya.local.variable_workflow_02AP0YFAXQ4YT4i3Ni5sdI45OPO05088pjt$",
+                      "variable_value_new": "$activity.definition_activity_02AOZMWQ459BE4xrlG0ZHUUXnrxQXSAliNW.output.matching_strings[0]$"
+                    }
+                  ]
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_02AOZ89ZO5JHW4Cd2yrPKNuFLmUnJx2dx2l",
+                "name": "HTTP Request",
+                "title": "SWIMS Ticket API call",
+                "type": "web-service.http_request",
+                "base_type": "activity",
+                "properties": {
+                  "accept": "*/*",
+                  "action_timeout": 10,
+                  "allow_auto_redirect": true,
+                  "allow_headers_redirect": false,
+                  "body": "{\n    \"productNames\": [\"Nexus9k\"],\n    \"ticketType\": \"dev\",\n    \"validityHours\": 24,\n    \"maxUses\": 100,\n    \"reason\": \"CX DCRS Nexus 9K Aberto Consent-token Authorization\",\n    \"authType\": \"CEC\",\n    \"username1\": \"$workflow.definition_workflow_02A4BBY4OWERD5Uwa1RZMU4uubbnoc2q2ya.local.variable_workflow_02AOZHV9ILM7A69tCRYUijRolheU3MOiBxt$\",\n    \"password1\": \"$workflow.definition_workflow_02A4BBY4OWERD5Uwa1RZMU4uubbnoc2q2ya.local.variable_workflow_02AOZI6LYEJQ04ZoD6hx53jJZKGmp9cFGVU$\"\n}",
+                  "content_type": "application/json",
+                  "continue_on_error_status_code": true,
+                  "continue_on_failure": false,
+                  "description": "Obtain a SWIMS ticket from swims.cisco.com/ticket/create",
+                  "display_name": "SWIMS Ticket API call",
+                  "method": "POST",
+                  "relative_url": "/create",
+                  "runtime_user": {
+                    "target_default": true
+                  },
+                  "skip_execution": false,
+                  "target": {
+                    "override_workflow_target": true,
+                    "target_id": "definition_target_02AOYZDISC8D53XFjJSxMljYRuxGpzCvuEJ"
+                  }
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_02AP0HZ7EQ4FI2mCZp3jpNhO3wlPXhap2R8",
+                "name": "JSONPath Query",
+                "title": "SWIMS ticket JSONPath Query",
+                "type": "corejava.jsonpathquery",
+                "base_type": "activity",
+                "properties": {
+                  "action_timeout": 180,
+                  "continue_on_failure": false,
+                  "description": "Extract SWMIS ticket ",
+                  "display_name": "SWIMS ticket JSONPath Query",
+                  "input_json": "$activity.definition_activity_02AOZ89ZO5JHW4Cd2yrPKNuFLmUnJx2dx2l.output.response_body$",
+                  "jsonpath_queries": [
+                    {
+                      "jsonpath_query": "$['ticket']",
+                      "jsonpath_query_name": "swims_ticket",
+                      "jsonpath_query_type": "string",
+                      "zdate_type_format": "yyyy-MM-dd'T'HH:mm:ssZ"
+                    }
+                  ],
+                  "skip_execution": false
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_02AOYVOL4WK0W2BgvjhFcHPv9AnGuZtCQIM",
+                "name": "HTTP Request",
+                "title": "Aberto API call",
+                "type": "web-service.http_request",
+                "base_type": "activity",
+                "properties": {
+                  "accept": "*/*",
+                  "action_timeout": 180,
+                  "allow_auto_redirect": true,
+                  "allow_headers_redirect": false,
+                  "body": "{\n    \"authType\": \"Ticket\",\n    \"ticket\": \"$activity.definition_activity_02AP0HZ7EQ4FI2mCZp3jpNhO3wlPXhap2R8.output.jsonpath_queries.swims_ticket$\",\n    \"ProductNames\": [\"Nexus9k\"],\n    \"clientHeuristics\": {\n        \"hostName\": \"VRICCI-M-T0P7.cisco.com\"\n    },\n    \"challenge\": \"$workflow.definition_workflow_02A4BBY4OWERD5Uwa1RZMU4uubbnoc2q2ya.local.variable_workflow_02AP0YFAXQ4YT4i3Ni5sdI45OPO05088pjt$\"\n}",
+                  "content_type": "application/json",
+                  "continue_on_error_status_code": false,
+                  "continue_on_failure": false,
+                  "description": "Get Aberto Challenge DEV signature",
+                  "display_name": "Aberto API call",
+                  "method": "POST",
+                  "relative_url": "/sign",
+                  "runtime_user": {
+                    "target_default": true
+                  },
+                  "skip_execution": false,
+                  "target": {
+                    "override_workflow_target": true,
+                    "target_id": "definition_target_02ADX7LKRWBCP1ci4jazkZvYXdv8ApGcvgY"
+                  }
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_02AFDLGFJU4OL2Cov07QrJ6bZIsH2LoWzAb",
+                "name": "JSONPath Query",
+                "title": "SWIMS Aberto consent_token JSONPath Query",
+                "type": "corejava.jsonpathquery",
+                "base_type": "activity",
+                "properties": {
+                  "action_timeout": 180,
+                  "continue_on_failure": false,
+                  "description": "Extract the Aberto consent-token",
+                  "display_name": "SWIMS Aberto consent_token JSONPath Query",
+                  "input_json": "$activity.definition_activity_02AOYVOL4WK0W2BgvjhFcHPv9AnGuZtCQIM.output.response_body$",
+                  "jsonpath_queries": [
+                    {
+                      "jsonpath_query": "$['response']",
+                      "jsonpath_query_name": "consent_token",
+                      "jsonpath_query_type": "string",
+                      "zdate_type_format": "yyyy-MM-dd'T'HH:mm:ssZ"
+                    }
+                  ],
+                  "skip_execution": false
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_02AP0NETUFVRZ7M6GieNflV6xIv0YLAd9cU",
+                "name": "Create Message",
+                "title": "Consent-Token Message",
+                "type": "activity.wt_create_message",
+                "base_type": "activity",
+                "properties": {
+                  "action_timeout": 180,
+                  "continue_on_failure": false,
+                  "display_name": "Consent-Token Message",
+                  "roomId": "$activity.definition_activity_02A4BLUAISDYO7Yalf93CVaTlXNgN6oksNM.output.jsonpath_queries.roomId$",
+                  "runtime_user": {
+                    "target_default": true
+                  },
+                  "skip_execution": false,
+                  "target": {
+                    "override_workflow_target": true,
+                    "target_id": "definition_target_02A4BVUHOJ7LC6wKqJGYxDA0Y7FJir3SNCC"
+                  },
+                  "text": "consent-token authorization is $activity.definition_activity_02AFDLGFJU4OL2Cov07QrJ6bZIsH2LoWzAb.output.jsonpath_queries.consent_token$"
+                },
+                "object_type": "definition_activity"
+              }
+            ]
+          },
+          {
             "unique_name": "definition_activity_02A4CIKXGDWG63PIZNTLfaMCKIbJY44pcS0",
             "name": "Condition Branch",
             "title": "Else",
@@ -777,6 +1034,7 @@
       "webhook_id": "",
       "version": "1.0.0",
       "properties": {
+        "description": "",
         "disabled": false,
         "display_name": "tac-ask-Trigger-Event",
         "queue_name": "tac-ask",
@@ -834,6 +1092,44 @@
         "host": "api.ciscospark.com",
         "protocol": "https",
         "version": "v1"
+      }
+    },
+    "definition_target_02ADX7LKRWBCP1ci4jazkZvYXdv8ApGcvgY": {
+      "unique_name": "definition_target_02ADX7LKRWBCP1ci4jazkZvYXdv8ApGcvgY",
+      "name": "SWIMs Aberto Service",
+      "title": "SWIMs Aberto Service",
+      "type": "web-service.endpoint",
+      "base_type": "target",
+      "object_type": "definition_target",
+      "properties": {
+        "description": "The SWIMS Aberto provides the cryptographic signing services needed to enable authorized privileged access solutions (Root Shell Access, Dev Key Install, etc.,) for the Cisco products.\nhttps://swims.cisco.com/aberto/api/sign",
+        "disable_certificate_validation": true,
+        "display_name": "SWIMs Aberto Service",
+        "host": "swims.cisco.com",
+        "ignore_proxy": true,
+        "no_runtime_user": true,
+        "path": "/aberto/api",
+        "port": 443,
+        "protocol": "https"
+      }
+    },
+    "definition_target_02AOYZDISC8D53XFjJSxMljYRuxGpzCvuEJ": {
+      "unique_name": "definition_target_02AOYZDISC8D53XFjJSxMljYRuxGpzCvuEJ",
+      "name": "SWIMS Ticket service",
+      "title": "SWIMS Ticket service",
+      "type": "web-service.endpoint",
+      "base_type": "target",
+      "object_type": "definition_target",
+      "properties": {
+        "description": "Refer to the documentation for swims.cisco.com/ticket endpoint at  https://swims.cisco.com/documents/SWIMS-Services-API.pdf\n\nSWIMS Ticket Service is a custom, SWIMS specific, ticket based authentication solution to generate and manage pre-authenticated tickets to access SWIMS Services.",
+        "disable_certificate_validation": true,
+        "display_name": "SWIMS Ticket service",
+        "host": "swims.cisco.com",
+        "ignore_proxy": true,
+        "no_runtime_user": true,
+        "path": "/ticket",
+        "port": 443,
+        "protocol": "https"
       }
     }
   },
@@ -903,19 +1199,6 @@
         "base_type": "workflow",
         "variables": [
           {
-            "schema_id": "datatype.string",
-            "properties": {
-              "value": "",
-              "scope": "input",
-              "name": "string_number",
-              "type": "datatype.string",
-              "is_required": false,
-              "is_invisible": false
-            },
-            "unique_name": "variable_workflow_02A0XU1NXYOE71JGDC3JzhPScEy45KTDMxp",
-            "object_type": "variable_workflow"
-          },
-          {
             "schema_id": "datatype.integer",
             "properties": {
               "value": 0,
@@ -926,6 +1209,19 @@
               "is_invisible": false
             },
             "unique_name": "variable_workflow_02A0XZIJY5C8T0Wr5grqJG9YvHiG3wExgIu",
+            "object_type": "variable_workflow"
+          },
+          {
+            "schema_id": "datatype.string",
+            "properties": {
+              "value": "",
+              "scope": "input",
+              "name": "string_number",
+              "type": "datatype.string",
+              "is_required": false,
+              "is_invisible": false
+            },
+            "unique_name": "variable_workflow_02A0XU1NXYOE71JGDC3JzhPScEy45KTDMxp",
             "object_type": "variable_workflow"
           }
         ],
